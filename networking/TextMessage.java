@@ -9,7 +9,7 @@ import java.io.IOException;
 public class TextMessage implements Message {
     // OVERVIEW: A TextMessage is a packet containing the handle of the client that
     // sent it, a short text message, and the server password.
-	
+
 	// The binary format is:
 	// int: Indicates the type of packet (PacketType.TEXT_MESSAGE)
 	// int: Length of the password in bytes
@@ -17,12 +17,12 @@ public class TextMessage implements Message {
 	// int: Length of the client handle string in bytes
 	// [handle length] bytes: The client's handle name as a string
 	// int: Length of the text message
-	// [message length] bytes: The message string 
-	
+	// [message length] bytes: The message string
+
 	// AF(c) = [ c.password, c.clientHandle, c.message ]
 	// The Rep Invariant is
 	// password != null, clientHandle != null, message != null
-	
+
     private final MessageType type = MessageType.TEXT_MESSAGE;
     public final String password;
     public final String clientHandle;
@@ -57,7 +57,7 @@ public class TextMessage implements Message {
         MessageParser.writeString(out, clientHandle);
         MessageParser.writeString(out, message);
         out.flush();
-        
+
         return byte_out.toByteArray();
     }
 
@@ -66,11 +66,11 @@ public class TextMessage implements Message {
         // EFFECTS: returns the type of this packet
         return type;
     }
-    
+
     public boolean repOk() {
 		return (type == MessageType.TEXT_MESSAGE && password != null && clientHandle != null && message != null);
 	}
-	
+
 	public String toString() {
 		return "[ TEXT_MESSAGE: "+password+", "+clientHandle+", "+message+" ]";
 	}

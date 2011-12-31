@@ -13,7 +13,7 @@ import java.util.List;
 public class ServerFinder extends Thread {
     // OVERVIEW: Listens for messages from the server that identify an open chat
     // and dispatches a notification to any listeners registered with it.
-	
+
     public interface ServerListener {
 		// OVERVIEW: A class that implements ServerListener can be notified when
         // a server has been found, and passed the address, name, number of members,
@@ -23,7 +23,7 @@ public class ServerFinder extends Thread {
 
 	private MulticastSocket socket;
     private List<ServerListener> listeners;
-	
+
 	public ServerFinder(String multicastAddress, int listenPort)
 		throws IOException {
 		socket = new MulticastSocket(listenPort);
@@ -31,7 +31,7 @@ public class ServerFinder extends Thread {
         listeners = new ArrayList<ServerListener>();
 		this.setDaemon(true);
 	}
-	
+
     public synchronized void addServerListener(ServerListener listener) {
         listeners.add(listener);
     }
@@ -52,12 +52,12 @@ public class ServerFinder extends Thread {
 		// serverFound on any ServerListeners registered with it when it receives an Announce message.
 		// Used for automatic server discovery
 		try {
-			while(!Thread.interrupted()) {   
+			while(!Thread.interrupted()) {
 				DatagramPacket p = new DatagramPacket(new byte[1024], 1024);
 				socket.receive(p);
-				
+
                 Message message = MessageParser.parse(p.getData());
-            	
+
                 if(message.getType() == MessageType.ANNOUNCE) {
                     Announce announce = (Announce)message;
                     InetSocketAddress addr = new InetSocketAddress(p.getAddress(), announce.serverPort);
@@ -68,5 +68,5 @@ public class ServerFinder extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

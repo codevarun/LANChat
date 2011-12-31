@@ -50,7 +50,7 @@ public class Join implements Message {
         MessageParser.writeString(stream, clientAddress);
         MessageParser.writeString(stream, Integer.toString(clientPort));
         stream.flush();
-        
+
         return byte_out.toByteArray();
     }
 
@@ -63,7 +63,7 @@ public class Join implements Message {
 	public boolean repOk() {
 		return (type == MessageType.JOIN && clientHandle != null && password != null && clientAddress != null);
 	}
-	
+
 	public String toString() {
 		return "[ JOIN: "+clientHandle+", "+password+", "+clientAddress+", "+clientPort+" ]";
 	}

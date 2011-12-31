@@ -10,7 +10,7 @@ import java.util.Vector;
 public class ChannelStatus implements Message {
     // OVERVIEW: A ChannelUpdate is a packet containing a list of the handles
 	// of all clients currently joined to the server
-	
+
     // The binary format is:
     // int: Indicates the type of packet (PacketType.CHANNEL_UPDATE)
     // int: the number of clients
@@ -53,7 +53,7 @@ public class ChannelStatus implements Message {
         	MessageParser.writeString(out, handle);
         }
         out.flush();
-        
+
         return byte_out.toByteArray();
     }
 
@@ -62,11 +62,11 @@ public class ChannelStatus implements Message {
         // EFFECTS: returns the type of this packet
         return type;
     }
-    
+
 	public boolean repOk() {
 		return (type == MessageType.CHANNEL_STATUS && clientHandles != null);
 	}
-	
+
 	public String toString() {
 		return "[ CHANNEL_STATUS: "+this.clientHandles+" ]";
 	}

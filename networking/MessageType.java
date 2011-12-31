@@ -5,11 +5,11 @@ import java.util.Vector;
 
 public enum MessageType {
 	// OVERVIEW: Enumerates the ID fields of chat protocol messages
-	
+
 	// AF(c) = A message identifier of type c.id
 	// Rep Invariant is
 	// id is a known Message ID, or 0
-	
+
     TEXT_MESSAGE(1),
     CHANNEL_UPDATE(2),
     ANNOUNCE(4),
@@ -33,7 +33,7 @@ public enum MessageType {
     	}
     	return UNKNOWN;
     }
-    
+
     public boolean repOk() {
     	// Returns true if the ID field is a known ID or 0
     	for(MessageType type : MessageType.values()) {

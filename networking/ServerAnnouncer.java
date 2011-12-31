@@ -12,20 +12,20 @@ public class ServerAnnouncer extends Thread {
 	// OVERVIEW: A thread that periodically sends out an Announce message to anyone listening
 	// on the predefined multicast address. Polls the server it's given to determine the fields
 	// of the message each time.
-	
+
 	// AF(c) = A source of Announce messages for server c.server from c.address, every defaultDelay milliseconds
 	// The Rep Invariant is
 	// socket != null, address != null, server != null
-	
+
     private MulticastSocket socket;
     private InetSocketAddress address;
     private int delay;
     private Server server;
-    
+
     public static final String defaultAddress = "230.0.0.1";
     public static final int defaultPort = 45000;
     public static final int defaultDelay = 1000;
-    
+
     // constructors
     public ServerAnnouncer(Server server) throws IOException {
         socket = new MulticastSocket(defaultPort);
@@ -36,7 +36,7 @@ public class ServerAnnouncer extends Thread {
         this.server = server;
         this.delay = defaultDelay;
     }
-    
+
     public ServerAnnouncer(String multicastAddress, int announcePort, int delay, Server server) throws IOException {
         socket = new MulticastSocket(announcePort);
         socket.joinGroup(Inet4Address.getByName(multicastAddress));
@@ -72,9 +72,9 @@ public class ServerAnnouncer extends Thread {
     public boolean repOk() {
 		return (socket != null && address != null && server != null);
 	}
-	
+
 	public String toString() {
 		return "[ ServerAnnouncer: "+ server + " ]";
 	}
-    
+
 }

@@ -10,7 +10,7 @@ import java.util.Date;
 public class ChannelUpdate implements Message {
     // OVERVIEW: A ChannelUpdate is a packet containing a message, the handle of
     // the client that sent it, and the time it was recieved by the server
-	
+
 	// The binary format is:
 	// int: Indicates the type of packet (PacketType.CHANNEL_UPDATE)
 	// int: Length of the client handle string in bytes
@@ -55,7 +55,7 @@ public class ChannelUpdate implements Message {
         MessageParser.writeString(out, message);
         out.writeLong(date.getTime());
         out.flush();
-        
+
         return byte_out.toByteArray();
     }
 
@@ -68,7 +68,7 @@ public class ChannelUpdate implements Message {
 	public boolean repOk() {
 		return (type == MessageType.CHANNEL_UPDATE && clientHandle != null && message != null && date != null);
 	}
-	
+
 	public String toString() {
 		return "[ CHANNEL_UPDATE: "+clientHandle+", "+message+", "+date+" ]";
 	}

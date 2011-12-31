@@ -10,7 +10,7 @@ public class Refuse implements Message {
 	// OVERVIEW: A Refuse is a packet sent to the client to indicate the server has
 	// refused to let it join the channel. It contains a string representing the reason why
 	// (e.g. wrong password, duplicate client handle)
-	
+
 	// AF(c) = [ c.reason ]
 	// Rep Invariant is
 	// reason != null
@@ -39,7 +39,7 @@ public class Refuse implements Message {
         stream.writeInt(type.id);
         MessageParser.writeString(stream, reason);
         stream.flush();
-        
+
         return byte_out.toByteArray();
     }
 
@@ -48,11 +48,11 @@ public class Refuse implements Message {
         // EFFECTS: returns the type of this packet
         return type;
     }
-    
+
 	public boolean repOk() {
 		return (type == MessageType.REFUSE && reason != null);
 	}
-	
+
 	public String toString() {
 		return "[ REFUSE: "+reason+" ]";
 	}

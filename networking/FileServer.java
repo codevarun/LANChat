@@ -17,11 +17,11 @@ import java.util.Vector;
 public class FileServer extends Thread {
 	// OVERVIEW: Shares a group of files through HTTP. Returns a HTTP 404
 	// when a request is recieved for an unregistered file.
-	
+
 	// AF(c) = A server that responds to requests to {c.getURL(f) | c.filenames.contains(f)}
 	// Rep Invariant: server is not null, filenames is not null
 	// Every filename in filenames should represent a valid path on the local filesystem
-	
+
     private ServerSocket server;
     private Vector<String> filenames;
 
@@ -36,13 +36,13 @@ public class FileServer extends Thread {
     	// Prepends a forward slash so that Windows paths can be used
     	filenames.add(filename);
     }
-    
+
     public String getURL(String filename) throws UnknownHostException {
     	// EFFECTS: Returns the URL at which a file can be accessed, assuming the file is already known by the server.
     	// Throws UnknownHostException if there is a problem getting the address of this machine.
     	return "http://" + Inet4Address.getLocalHost().getHostAddress() + ":" + server.getLocalPort() + "/" + filename;
     }
-    
+
     @Override
     public void run() {
     	// EFFECTS: accepts new connections from the socket and passes them off to a FileRequestHandler, which runs in
@@ -52,21 +52,21 @@ public class FileServer extends Thread {
     			Socket connected = server.accept();
     			FileRequestHandler handler = new FileRequestHandler(this, connected);
     			handler.start();
-    			
+
     		} catch(IOException e) {
     			System.err.println("Server connection error");
     		}
     	}
     }
-    
+
     private class FileRequestHandler extends Thread {
-    	// OVERVIEW: Handles a single HTTP GET request for a file, checking the given server's 
+    	// OVERVIEW: Handles a single HTTP GET request for a file, checking the given server's
     	// list of filenames before opening the file and sending the data.
     	FileServer server;
     	Socket connection;
     	BufferedReader in;
     	DataOutputStream out;
-    	
+
     	// constructors
     	public FileRequestHandler(FileServer server, Socket connection) throws IOException {
     		this.server = server;
@@ -88,7 +88,7 @@ public class FileServer extends Thread {
 
 	            // Decode the path and remove the preceding forward-slash
 	            String path = URLDecoder.decode(query, "UTF-8").substring(1);
-	            
+
 	            System.out.println("FileServer: received a request for " + path);
 
 	            if(method.equals("GET") && server.filenames.contains(path)) {
@@ -96,7 +96,7 @@ public class FileServer extends Thread {
 	            	out.writeBytes("HTTP/1.1 200 OK\r\n");
 	            	out.writeBytes("Content-Length: " + fin.available() + "\r\n");
 	                out.writeBytes("\r\n");
-	            	
+
 	                byte[] buffer = new byte[1024] ;
 	                int bytesRead;
 
@@ -104,7 +104,7 @@ public class FileServer extends Thread {
 	                    out.write(buffer, 0, bytesRead);
 	                }
 	                fin.close();
-	                
+
 	            }
 	            else {
 	            	String s404 = "<h1>404: Not Found</h1>";
@@ -114,23 +114,23 @@ public class FileServer extends Thread {
 	            	out.writeBytes("\r\n");
 	                out.writeBytes(s404);
 	            }
-				
+
 				this.connection.close();
-				
+
 			} catch (IOException e) {
 				System.err.println("FileServer: Error serving file request");
 			}
 		}
     }
-    
+
 
 	public boolean repOk() {
 		return (server != null && filenames != null);
 	}
-	
+
 	public String toString() {
 		return "[ FileServer hosting: "+filenames+" ]";
 	}
-    
+
 }
 

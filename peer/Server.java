@@ -20,34 +20,34 @@ import networking.TextMessage;
 public class Server extends Peer{
 //OVERVIEW: A server represents a server on a network in a server-client model.
 //	It can receive messages from clients or itself and updates all clients with the message.
-    
+
 //	AF(c) = c.getClientHandle() on c.getServerName() @ c.serverAddress:c.serverPort
 //			password = c.password, announcer = new ServerAnnouncer(), gui = c.window
 //	AF(c.clientList) = for (0<=i<clientList.size()) clientList.get(i);
-	
+
 // Rep Invariants:
 	private ArrayList<ClientInfo> clientList;	//clientList elements cannot be null and all elements must have unique clientHandle
-    
+
     private String serverName;	//cannot be null
     protected String password;	//cannot be null
     private String clientHandle;	//cannot be null
     public boolean needsPassword;
-    
+
     private ServerAnnouncer announcer;	//cannot be null
-    
+
     private ServerWindow window;	//cannot be null
-    
+
 //Constructor
     public Server(String serverName, String password, boolean needsPassword, String clientHandle) throws IOException {
     //EFFECTS: If serverPort is in use throw SocketException
-    //         else initialize serverChat gui and instantiate server with serverPort, 
+    //         else initialize serverChat gui and instantiate server with serverPort,
     //			serverName, password, clientHandle, and empty clientList
     //			set needsPassword to true if password is not empty else set to false
         super();
-        
+
         window = new ServerWindow(this);
         window.setVisible(true);
-        
+
         clientList = new ArrayList<ClientInfo>();
         this.serverName=serverName;
         this.password=password;
@@ -58,10 +58,10 @@ public class Server extends Peer{
         	System.out.println("No Password!!");
         }
         this.clientHandle=clientHandle;
-        
+
         this.announcer = new ServerAnnouncer(this);
         this.announcer.start();
-        
+
         System.out.println("Starting server on " + this.getLocalAddress() + " : " + this.getPort());
 
         //Add ourselves to the client list and update
@@ -69,7 +69,7 @@ public class Server extends Peer{
         clientUpdate();
         System.out.println("Server started on port " + this.getPort());
     }
-    
+
 //Mutators
     public boolean addClient(ClientInfo client) throws NullPointerException{
     //EFFECTS: If client is null throw NullPointerException
@@ -85,7 +85,7 @@ public class Server extends Peer{
         clientList.add(client);
         return true;
     }
-    
+
     public boolean removeClient(ClientInfo client){
     //EFFECTS: If client is null throw NullPointerException
     //            Removes client from the clientList
@@ -94,33 +94,33 @@ public class Server extends Peer{
         else clientList.remove(i);
         return true;
     }
-    
+
     public void setPassword(String password){
         //EFFECTS: sets this.password to password
             this.password = password;
 	}
-    
-//Observers 
+
+//Observers
     public String getClientHandle(){
     //EFFECTS: return client handle
         return clientHandle;
     }
-    
+
     public synchronized int getNumMembers() {
     //EFFECTS: return the number of members in clientList
         return clientList.size();
 	}
-	  
+
     public String getServerName(){
     //EFFECTS: return server name
     	return serverName;
     }
-    
+
     public int getServerPort(){
     //EFFECTS: return server port
     	return serverAddress.getPort();
     }
-    
+
 //Helper
     private void clientUpdate(){
     //EFFECTS: updates gui with list of clients and sends ChannelStatus to all clients with list of clients
@@ -132,7 +132,7 @@ public class Server extends Peer{
 		}
         window.updateUserList(generateClientHandles());
     }
-    
+
     private Vector<String> generateClientHandles(){
     //EFFECTS: generates and returns a collection of all the clientHandle current on the server
         Vector<String> v = new Vector<String>();
@@ -162,7 +162,7 @@ public class Server extends Peer{
             sendTo(message, client.clientSocketAddress);
         }
     }
-    
+
     public void receive(Message message) throws IOException{
     //EFFECTS: sends message to all clients and update gui with message
     	TextMessage tm = (TextMessage)message;
@@ -170,14 +170,14 @@ public class Server extends Peer{
         String text = msgParse(message);
         window.addText(text);
     }
-    
+
     private String msgParse(Message message){
     //EFFECTS: takes message and returns a string with Time.time() + " " + clientHandle + " " + message
         TextMessage m = (TextMessage)message;
         String s = ("[" + m.clientHandle + "]: " + m.message);
         return s;
     }
-    
+
     @Override
     protected void handleMessage(Message message, InetSocketAddress source) {
     //REQUIRES: message and source are not null
@@ -185,7 +185,7 @@ public class Server extends Peer{
     //			if message is TEXT_MESSAGE check password
     //				if incorrect, ignore
     //				else parse message and send message and new clientHandleList to all clients
-    //			if message is JOIN check password 
+    //			if message is JOIN check password
     //				if incorrect, send a refuse("Invalid Password")
     //				else add client to clientList
     //			if message is LEAVE check password
@@ -229,7 +229,7 @@ public class Server extends Peer{
                     sendTo(refuse, source);
                 } catch (IOException e) {
                     e.printStackTrace();
-                }     
+                }
                 break;
             case LEAVE:
                 Leave l = (Leave)message;
@@ -246,7 +246,7 @@ public class Server extends Peer{
         }
 
     }
-    
+
 	@Override
 	public String getPeerName() {
 	//EFFECTS: returns server name
@@ -256,9 +256,9 @@ public class Server extends Peer{
 	public boolean repOk() {
 		return (serverName != null && clientHandle != null && password != null && window != null && announcer != null);
 	}
-	
+
 	public String toString() {
 		return "[Server " + serverName + " made by " + getClientHandle()+" on "+serverAddress+":"+this.getPort()+", "+password+"]";
 	}
-	
+
 }

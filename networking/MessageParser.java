@@ -11,7 +11,7 @@ public class MessageParser {
 
     public static Message parse(byte[] data) throws IOException {
         // REQUIRES: data is not null
-        // EFFECTS: parses and constructs a new Message from data, or throws 
+        // EFFECTS: parses and constructs a new Message from data, or throws
         // IOException if there was a parsing problem.
         DataInputStream stream = new DataInputStream(new ByteArrayInputStream(data));
         int messageType = stream.readInt();
@@ -58,11 +58,11 @@ public class MessageParser {
         stream.writeInt(bin.length);
         stream.write(bin);
     }
-    
+
     public boolean repOk() {
     	return true;
     }
-    
+
     public String toString() {
     	return "[ MessageParser ]";
     }

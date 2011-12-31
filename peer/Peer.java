@@ -15,7 +15,7 @@ import networking.Message;
 import networking.MessageParser;
 
 public abstract class Peer extends Thread {
-    // OVERVIEW: A peer represents a client or server on the network. It can 
+    // OVERVIEW: A peer represents a client or server on the network. It can
     // send and receive basic messages using DatagramSockets.
 
 	// Socket to use for network communication
@@ -26,9 +26,9 @@ public abstract class Peer extends Thread {
 
     // File Server
     public FileServer fileserver;
-    
+
     // constructors
-    
+
     public Peer() throws IOException {
         // EFFECTS: Initializes this with a new socket and sets the server address
         // to it's own address
@@ -36,7 +36,7 @@ public abstract class Peer extends Thread {
         socket = new DatagramSocket();
         this.serverAddress = (InetSocketAddress)socket.getLocalSocketAddress();
     }
-    
+
 	public Peer(String serverAddress, int serverPort)
 		throws IOException {
         // REQUIRES: serverAddress is a valid host on the network, and serverPort
@@ -50,7 +50,7 @@ public abstract class Peer extends Thread {
 			System.err.println("Warning: server is not reachable");
 		}
 	}
-	
+
 	public String getLocalAddress() {
 		// EFFECTS: Returns the address of localhost as a String if available, else returns the
 		// local address of socket
@@ -60,7 +60,7 @@ public abstract class Peer extends Thread {
 			return socket.getLocalAddress().getHostAddress();
 		}
 	}
-	
+
 	public int getPort() {
 		// EFFECTS: Returns the port socket is currently bound to
 		return socket.getLocalPort();
@@ -79,7 +79,7 @@ public abstract class Peer extends Thread {
         System.out.println("[" + getPeerName() + "] Sending " + message.getType() + " from port " + socket.getLocalPort() + " to " + this.serverAddress);
         this.sendTo(message, this.serverAddress);
 	}
-	
+
 	public void sendTo(Message message, SocketAddress destination)
 		throws IOException {
         // REQUIRES: data is not null
@@ -88,7 +88,7 @@ public abstract class Peer extends Thread {
         DatagramPacket packet = new DatagramPacket(data, data.length, destination);
 		socket.send(packet);
 	}
-	
+
 	private DatagramPacket receiveData()
 		throws IOException {
         // EFFECTS: listens for incoming packets. Blocks until new data is available,
@@ -106,7 +106,7 @@ public abstract class Peer extends Thread {
     	// new Message as the argument
         DatagramPacket packet;
         Message message;
-        
+
         while(!this.isInterrupted()) {
             try {
                 packet = this.receiveData();
@@ -131,16 +131,16 @@ public abstract class Peer extends Thread {
         }
 		System.out.println("[" + getPeerName() + "] shut down");
     }
-	
+
 
     protected void handleMessage(Message message, InetSocketAddress source) {
     	// EFFECTS: A base handler for all messages. Just prints out the peer name and the
     	// type of message received.
-    	
+
     	// Print out type of packet
 		System.out.println("[" + getPeerName() + "] Received a " + message.getType());
     }
-    
+
     public String getPeerName() {
     	// EFFECTS: returns the name/handle of this Peer
     	return "Peer";
@@ -154,5 +154,5 @@ public abstract class Peer extends Thread {
     	fileserver.addFile(filename);
     	return fileserver.getURL(filename);
     }
-    
+
 }

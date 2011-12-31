@@ -50,7 +50,7 @@ public class Leave implements Message {
         MessageParser.writeString(stream, clientAddress);
         MessageParser.writeString(stream, Integer.toString(clientPort));
         stream.flush();
-        
+
         return byte_out.toByteArray();
     }
 
@@ -59,11 +59,11 @@ public class Leave implements Message {
         // EFFECTS: returns the type of this packet
         return type;
     }
-    
+
 	public boolean repOk() {
 		return (type == MessageType.LEAVE && clientHandle != null && password != null && clientAddress != null);
 	}
-	
+
 	public String toString() {
 		return "[ LEAVE: "+clientHandle+", "+password+", "+clientAddress+", "+clientPort+" ]";
 	}

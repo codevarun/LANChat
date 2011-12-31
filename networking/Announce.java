@@ -19,7 +19,7 @@ public class Announce implements Message {
 	// AF(c) = [ c.serverName, c.serverAddress, c.serverPort, c.numMembers, c.needsPassword ]
 	// The Rep Invariant is
 	// serverName != null, serverAddress != null
-	
+
     private final MessageType type = MessageType.ANNOUNCE;
     public final String serverName;
     public final String serverAddress;
@@ -74,7 +74,7 @@ public class Announce implements Message {
 	public boolean repOk() {
 		return (type == MessageType.ANNOUNCE && serverName != null && serverAddress != null);
 	}
-	
+
 	public String toString() {
 		return "[ ANNOUNCE: "+serverName+", "+serverAddress+", "+serverPort+", "+numMembers+", "+needsPassword+" ]";
 	}
